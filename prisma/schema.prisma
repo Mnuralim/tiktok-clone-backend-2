@@ -1,0 +1,85 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("DB_URL") // uses connection pooling
+}
+
+model User {
+  id            String             @id @default(cuid())
+  username      String          @unique
+  email         String          @unique
+  name          String?
+  profilePicUrl String?
+  bio           String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  videos        Post[]
+  likes         Like[]
+  comments      Comment[]
+  followers     Follow[]        @relation("UserFollowers")
+  following     Follow[]        @relation("UserFollowing")
+  savedVideos   UserSavedVideo[]
+}
+
+model Post {
+  id           String             @id @default(cuid())
+  userId       String
+  caption      String?
+  location     String
+  videoUrl     String
+  thumbnailUrl String?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  user         User            @relation(fields: [userId], references: [id])
+  likes        Like[]
+  comments     Comment[]
+  savedBy      UserSavedVideo[]
+}
+
+model Like {
+  id        String      @id @default(cuid())
+  userId    String
+  videoId   String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  video     Post    @relation(fields: [videoId], references: [id])
+}
+
+model Comment {
+  id          String      @id @default(cuid())
+  userId      String
+  videoId     String
+  commentText String
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id])
+  video       Post    @relation(fields: [videoId], references: [id])
+}
+
+model Follow {
+  followerId String
+  followingId String
+  createdAt DateTime @default(now())
+  follower  User      @relation("UserFollowers", fields: [followerId], references: [id])
+  following User      @relation("UserFollowing", fields: [followingId], references: [id])
+
+  @@id([followerId, followingId])
+}
+
+model UserSavedVideo {
+  userId  String
+  videoId String
+  savedAt DateTime @default(now())
+  user    User    @relation(fields: [userId], references: [id])
+  video   Post   @relation(fields: [videoId], references: [id])
+
+  @@id([userId, videoId])
+}

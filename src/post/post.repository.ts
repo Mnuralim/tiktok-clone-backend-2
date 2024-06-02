@@ -23,14 +23,51 @@ export const findAllPost = async () => {
     include: {
       user: true,
       likes: true,
-      comments: {
+      savedBy: {
         select: {
-          id: true,
+          userId: true,
         },
       },
+      _count: true,
     },
     orderBy: {
       createdAt: 'desc',
+    },
+  })
+}
+
+export const findPostById = async (id: string) => {
+  return db.post.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      user: true,
+      likes: true,
+      savedBy: {
+        select: {
+          userId: true,
+        },
+      },
+      _count: true,
+    },
+  })
+}
+
+export const unSavedPost = async (postId: string, userId: string) => {
+  await db.userSavedVideo.deleteMany({
+    where: {
+      userId,
+      videoId: postId,
+    },
+  })
+}
+
+export const savePost = async (postId: string, userId: string) => {
+  await db.userSavedVideo.create({
+    data: {
+      userId,
+      videoId: postId,
     },
   })
 }

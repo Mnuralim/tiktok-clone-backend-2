@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { addNewPost, getAllPost } from './post.controller'
+import { addNewPost, getAllPost, getSinglePost, savePost } from './post.controller'
 import authentication from '../middlewares/authentication'
 import upload from '../middlewares/uploadFile'
 
@@ -22,6 +22,8 @@ router.post(
 )
 
 router.get('/', getAllPost)
+router.get('/:id', getSinglePost)
+router.patch('/save/:id', authentication, savePost)
 
 const postRouter = router
 export default postRouter

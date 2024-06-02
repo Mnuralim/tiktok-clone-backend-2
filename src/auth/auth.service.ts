@@ -30,7 +30,7 @@ export const loginGoogle = async (tokenId: string) => {
   const payloadData = {
     email: payload?.email as string,
     id: isRegistered ? isRegistered.id : userId,
-    username: payload?.name as string,
+    username: isRegistered ? isRegistered.username : payload?.email?.split('@')[0],
   }
 
   const accesToken = jwt.sign(payloadData, process.env.JWT_SECRET as string, {

@@ -25,9 +25,31 @@ model User {
   videos        Post[]
   likes         Like[]
   comments      Comment[]
-  followers     Follow[]        @relation("UserFollowers")
-  following     Follow[]        @relation("UserFollowing")
+  followers     Follower[]     @relation("followes")
+  followes      Follower[]      @relation("follower")
+  following     Following[]      @relation("following")
+  followings    Following[]      @relation("followings")
   savedVideos   UserSavedVideo[]
+}
+
+model Follower {
+  id          String             @id @default(cuid())
+  followesId  String
+  followerId  String
+  createdAt   DateTime  @default(now())
+  followes    User      @relation("followes" ,fields: [followesId], references: [id])
+  follower    User      @relation( "follower",fields: [followerId], references: [id])
+  @@index([followesId,followerId])
+}
+
+model Following {
+  id          String             @id @default(cuid())
+  followingsId  String
+  followingId  String
+  createdAt   DateTime  @default(now())
+  followings    User      @relation("followings" ,fields: [followingsId], references: [id])
+  following    User      @relation("following",fields: [followingId], references: [id])
+  @@index([followingsId,followingId])
 }
 
 model Post {
@@ -64,15 +86,6 @@ model Comment {
   video       Post    @relation(fields: [videoId], references: [id])
 }
 
-model Follow {
-  followerId String
-  followingId String
-  createdAt DateTime @default(now())
-  follower  User      @relation("UserFollowers", fields: [followerId], references: [id])
-  following User      @relation("UserFollowing", fields: [followingId], references: [id])
-
-  @@id([followerId, followingId])
-}
 
 model UserSavedVideo {
   userId  String

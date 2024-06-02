@@ -47,3 +47,27 @@ export const addNewPost = async (
 export const getAllPost = async () => {
   return await repository.findAllPost()
 }
+
+export const getSinglePost = async (id: string) => {
+  const post = await repository.findPostById(id)
+  if (!post) {
+    throw new ApiError('Post not found', 404)
+  }
+  return post
+}
+
+export const savePost = async (postId: string, userId: string) => {
+  const post = await getSinglePost(postId)
+
+  const alreadySaved = post.savedBy.find((p) => p.userId === userId)
+  let message: string = ''
+  if (alreadySaved) {
+    await repository.unSavedPost(postId, userId)
+    message = 'post unsaved successfully'
+  } else {
+    await repository.savePost(postId, userId)
+    message = 'post saved successfully'
+  }
+
+  return message
+}

@@ -31,11 +31,53 @@ export const getAllPost = async (req: Request, res: Response, next: NextFunction
     res.status(200).json({
       success: true,
       message: 'Success add new post',
-      data: {
-        posts,
-      },
+      data: posts,
     })
   } catch (error: unknown) {
+    if (error instanceof ApiError) {
+      next(new ApiError(error.message, error.statusCode))
+    } else {
+      next(new ApiError('Internal server error', 500))
+    }
+  }
+}
+
+export const getSinglePost = async (req: Request, res: Response, next: NextFunction) => {
+  const { id } = req.params
+  try {
+    if (!id) {
+      throw new ApiError('Id is required', 400)
+    }
+    const post = await service.getSinglePost(id)
+
+    res.status(200).json({
+      success: true,
+      message: 'Success add new post',
+      data: post,
+    })
+  } catch (error: unknown) {
+    if (error instanceof ApiError) {
+      next(new ApiError(error.message, error.statusCode))
+    } else {
+      next(new ApiError('Internal server error', 500))
+    }
+  }
+}
+
+export const savePost = async (req: Request, res: Response, next: NextFunction) => {
+  const { id } = req.params
+  try {
+    if (!id) {
+      throw new ApiError('Id is required', 400)
+    }
+    const message = await service.savePost(id, req.user.id)
+
+    res.status(200).json({
+      success: true,
+      message,
+    })
+  } catch (error: unknown) {
+    console.log(error)
     if (error instanceof ApiError) {
       next(new ApiError(error.message, error.statusCode))
     } else {

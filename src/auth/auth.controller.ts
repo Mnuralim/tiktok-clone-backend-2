@@ -3,14 +3,14 @@ import ApiError from '../utils/apiError'
 import * as service from './auth.service'
 
 export const loginGoogle = async (req: Request, res: Response, next: NextFunction) => {
-  const tokenId = req.headers.authorization
+  const { tokenId } = req.query
 
   try {
     if (!tokenId) {
       throw new ApiError('Token id is required', 400)
     }
 
-    const { accesToken, payloadData, refreshToken } = await service.loginGoogle(tokenId)
+    const { accesToken, payloadData, refreshToken } = await service.loginGoogle(tokenId.toString())
     res.cookie('refreshToken', refreshToken, {
       maxAge: 7 * 24 * 60 * 60 * 1000,
       httpOnly: true,
@@ -22,6 +22,7 @@ export const loginGoogle = async (req: Request, res: Response, next: NextFunctio
       data: { ...payloadData, accesToken },
     })
   } catch (error: unknown) {
+    console.log(error)
     if (error instanceof ApiError) {
       next(new ApiError(error.message, error.statusCode))
     } else {

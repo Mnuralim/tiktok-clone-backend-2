@@ -9,7 +9,7 @@ export const loginGoogle = async (tokenId: string) => {
   const client = new OAuth2Client(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET)
 
   const ticket = await client.verifyIdToken({
-    idToken: tokenId.slice(7),
+    idToken: tokenId,
     audience: GOOGLE_CLIENT_ID,
   })
 
@@ -18,6 +18,7 @@ export const loginGoogle = async (tokenId: string) => {
   if (payload?.aud != GOOGLE_CLIENT_ID) {
     throw new ApiError('Token id is not valid', 400)
   }
+
   const isRegistered = await findUserByEmail(payload?.email as string)
 
   let userId

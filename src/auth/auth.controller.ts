@@ -21,7 +21,11 @@ export const loginGoogle = async (req: Request, res: Response, next: NextFunctio
       message: 'Login success',
       data: { ...payloadData, accesToken },
     })
-  } catch (error: any) {
-    next(new ApiError(error, 500))
+  } catch (error: unknown) {
+    if (error instanceof ApiError) {
+      next(new ApiError(error.message, error.statusCode))
+    } else {
+      next(new ApiError('Internal server error', 500))
+    }
   }
 }

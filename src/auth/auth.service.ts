@@ -6,7 +6,7 @@ import { OAuth2Client } from 'google-auth-library'
 export const loginGoogle = async (tokenId: string) => {
   const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
   const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET
-  const client = new OAuth2Client(GOOGLE_CLIENT_ID, 'GOOGLE_CLIENT_SECRET')
+  const client = new OAuth2Client(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET)
 
   const ticket = await client.verifyIdToken({
     idToken: tokenId,
@@ -18,11 +18,6 @@ export const loginGoogle = async (tokenId: string) => {
   if (payload?.aud != GOOGLE_CLIENT_ID) {
     throw new ApiError('Token id is not valid', 400)
   }
-
-  console.log({
-    aud: payload?.aud,
-    client: GOOGLE_CLIENT_ID,
-  })
 
   const isRegistered = await findUserByEmail(payload?.email as string)
 

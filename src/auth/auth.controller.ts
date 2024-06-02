@@ -22,6 +22,7 @@ export const loginGoogle = async (req: Request, res: Response, next: NextFunctio
       data: { ...payloadData, accesToken },
     })
   } catch (error: unknown) {
+    console.log(error)
     if (error instanceof ApiError) {
       next(new ApiError(error.message, error.statusCode))
     } else {

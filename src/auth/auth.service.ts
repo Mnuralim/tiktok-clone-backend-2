@@ -19,6 +19,11 @@ export const loginGoogle = async (tokenId: string) => {
     throw new ApiError('Token id is not valid', 400)
   }
 
+  console.log({
+    aud: payload?.aud,
+    client: GOOGLE_CLIENT_ID,
+  })
+
   const isRegistered = await findUserByEmail(payload?.email as string)
 
   let userId

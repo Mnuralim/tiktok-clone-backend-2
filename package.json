@@ -12,6 +12,7 @@
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.9.13",
     "typescript": "^5.2.2"
   },
   "name": "server",
@@ -21,9 +22,10 @@
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   },
   "scripts": {
-    "build": "npx prisma generate && npx tsc",
+    "build": "npx tsc",
     "start": "node dist/server.js",
-    "dev": "nodemon server.ts"
+    "dev": "nodemon server.ts",
+    "postinstall": "prisma generate"
   },
   "keywords": [],
   "author": "",
@@ -38,6 +40,7 @@
     "@types/morgan": "^1.9.5",
     "@types/multer": "^1.4.7",
     "@types/node": "^20.5.9",
+    "@types/nodemailer": "^6.4.15",
     "prisma": "^5.10.2"
   }
 }

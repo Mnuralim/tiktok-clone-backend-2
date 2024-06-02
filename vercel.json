@@ -1,16 +1,15 @@
 {
   "version": 2,
-  "name": "whatsapp api",
   "builds": [
     {
-      "src": "dist/server.js",
-      "use": "@vercel/node"
+      "src": "server.ts",
+      "user": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "dist/server.js"
+      "dest": "server.ts"
     }
   ]
 }

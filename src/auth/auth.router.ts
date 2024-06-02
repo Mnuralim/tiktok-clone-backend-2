@@ -3,7 +3,7 @@ import { loginGoogle } from './auth.controller'
 
 const router: Router = Router()
 
-router.post('/login-google', loginGoogle)
+router.get('/login-google', loginGoogle)
 
 const authRouter = router
 export default authRouter

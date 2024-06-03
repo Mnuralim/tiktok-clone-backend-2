@@ -17,12 +17,12 @@
   },
   "name": "server",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "dist/server.js",
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   },
   "scripts": {
-    "build": "npx tsc",
+    "build": "tsc",
     "start": "node dist/server.js",
     "dev": "nodemon server.ts",
     "postinstall": "prisma generate"

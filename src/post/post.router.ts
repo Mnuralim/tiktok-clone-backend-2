@@ -21,8 +21,8 @@ router.post(
   addNewPost
 )
 
-router.get('/', getAllPost)
-router.get('/:id', getSinglePost)
+router.get('/', authentication, getAllPost)
+router.get('/:id', authentication, getSinglePost)
 router.patch('/save/:id', authentication, savePost)
 
 const postRouter = router

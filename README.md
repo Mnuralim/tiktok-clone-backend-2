@@ -20,7 +20,7 @@ Install my-project with npm
 Clone the project
 
 ```bash
-  [git clone https://github.com/Mnuralim/tiktok-clone-backend-V2.git](https://github.com/Mnuralim/tiktok-clone-backend-2.git)
+  https://github.com/Mnuralim/tiktok-clone-backend-2.git
 ```
 
 Go to the project directory

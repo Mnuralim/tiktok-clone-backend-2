@@ -17,7 +17,7 @@ export const findAllCommentPost = async (postId: string) => {
 }
 
 export const createComment = async (postId: string, userId: string, commentText: string) => {
-  await db.comment.create({
+  return await db.comment.create({
     data: {
       commentText,
       userId,

@@ -29,6 +29,7 @@ model User {
   followes      Follower[]      @relation("follower")
   following     Following[]      @relation("following")
   followings    Following[]      @relation("followings")
+  notifications Notification[]
   savedVideos   UserSavedVideo[]
 }
 
@@ -95,4 +96,26 @@ model UserSavedVideo {
   video   Post   @relation(fields: [videoId], references: [id])
 
   @@id([userId, videoId])
+}
+
+model Notification {
+  id                    String      @id @default(cuid())
+  userId                String
+  type                  NotificationType
+  message               String
+  read                  Boolean  @default(false)
+  createdAt             DateTime @default(now())
+  actorProfilePicUrl    String?
+  actorUsername         String?
+  additionalInfo        Json?
+  user                  User     @relation(fields: [userId], references: [id])
+}
+
+enum NotificationType {
+  like
+  comment
+  follow
+  mention
+  reply
+  update
 }

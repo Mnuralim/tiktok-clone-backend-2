@@ -3,15 +3,7 @@ import { type Request } from 'express'
 import ApiError from '../utils/apiError'
 
 const multerFiltering = (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
-  if (
-    file.mimetype === 'image/png' ||
-    file.mimetype === 'image/jpg' ||
-    file.mimetype === 'image/jpeg' ||
-    file.mimetype === 'image/webp' ||
-    file.mimetype === 'image/gif' ||
-    file.mimetype === 'video/mp4' ||
-    file.mimetype == 'video/mov'
-  ) {
+  if (file.mimetype.startsWith('image') || file.mimetype.startsWith('video')) {
     cb(null, true)
   } else {
     // @ts-expect-error : Unreachable code error
@@ -22,7 +14,7 @@ const multerFiltering = (req: Request, file: Express.Multer.File, cb: multer.Fil
 const upload: Multer = multer({
   fileFilter: multerFiltering,
   limits: {
-    fileSize: 3000000,
+    fileSize: 2000000,
   },
 })
 

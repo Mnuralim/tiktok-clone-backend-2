@@ -1,4 +1,4 @@
-import { User } from '@prisma/client'
+import { NotificationType, User } from '@prisma/client'
 
 export interface RegisterBody {
   username: string
@@ -25,4 +25,13 @@ interface AuthenticationPayload {
   username: string
   iat: number
   exp: number
+}
+
+interface CreateNotification {
+  userId: string
+  type: NotificationType
+  message: string
+  actorProfilePicUrl?: string
+  actorUsername?: string
+  additionalInfo?: any
 }

@@ -31,10 +31,10 @@ export const addNewComment = async (req: Request, res: Response, next: NextFunct
   const { commentText }: { commentText: string } = req.body
   try {
     if (!postId || !commentText) {
-      throw new ApiError('Post id &7 comment text are required', 400)
+      throw new ApiError('Post id & comment text are required', 400)
     }
 
-    await service.addNewComment(postId, req.user.id, commentText)
+    await service.addNewComment(postId, req.user, commentText)
 
     res.status(200).json({
       success: true,

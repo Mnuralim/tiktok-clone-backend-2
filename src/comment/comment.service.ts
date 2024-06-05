@@ -1,4 +1,7 @@
+import { User } from '@prisma/client'
+import { CreateNotification } from '../../types'
 import { getSinglePost } from '../post/post.service'
+import { createNotification } from '../user/user.repository'
 import * as repository from './comment.repository'
 
 export const getAllCommentPost = async (postId: string) => {
@@ -7,7 +10,22 @@ export const getAllCommentPost = async (postId: string) => {
   return comments
 }
 
-export const addNewComment = async (postId: string, userId: string, commentText: string) => {
-  await getSinglePost(postId)
-  await repository.createComment(postId, userId, commentText)
+export const addNewComment = async (postId: string, actorUser: User, commentText: string) => {
+  const post = await getSinglePost(postId)
+  const comment = await repository.createComment(postId, actorUser.id, commentText)
+  if (post.userId !== actorUser.id) {
+    const payload: CreateNotification = {
+      message: `commented: ${commentText}`,
+      type: 'comment',
+      userId: post.userId,
+      actorProfilePicUrl: actorUser.profilePicUrl || undefined,
+      actorUsername: actorUser.username,
+      additionalInfo: {
+        postId,
+        postCover: post.thumbnailUrl,
+        commentId: comment.id,
+      },
+    }
+    await createNotification(payload)
+  }
 }

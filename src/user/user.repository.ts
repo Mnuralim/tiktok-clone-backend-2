@@ -1,5 +1,6 @@
 import { User } from '@prisma/client'
 import { db } from '../db'
+import { CreateNotification } from '../../types'
 
 export const findAllUsers = async (query: string) => {
   const users = await db.user.findMany({
@@ -104,5 +105,22 @@ export const updateUserById = async (id: string, body: User) => {
       id,
     },
     data: body,
+  })
+}
+
+export const findAllNotificationUser = async (userId: string) => {
+  return await db.notification.findMany({
+    where: {
+      userId,
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  })
+}
+
+export const createNotification = async (props: CreateNotification) => {
+  await db.notification.create({
+    data: props,
   })
 }

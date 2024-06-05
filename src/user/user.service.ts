@@ -66,3 +66,7 @@ export const updateUser = async (id: string, body: User, file: Express.Multer.Fi
 
   await repository.updateUserById(id, bodies)
 }
+
+export const getAllNotification = async (userId: string) => {
+  return await repository.findAllNotificationUser(userId)
+}

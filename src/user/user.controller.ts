@@ -74,7 +74,23 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
     await service.updateUser(id, body, file)
     res.status(200).json({ success: true, message: 'Success updated user data' })
   } catch (error: unknown) {
-    console.log(error)
+    if (error instanceof ApiError) {
+      next(new ApiError(error.message, error.statusCode))
+    } else {
+      next(new ApiError('Internal server error', 500))
+    }
+  }
+}
+
+export const getAllNotification = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const notifications = await service.getAllNotification(req.user.id)
+    res.status(200).json({
+      success: true,
+      message: 'Success fetched notification data',
+      data: notifications,
+    })
+  } catch (error: unknown) {
     if (error instanceof ApiError) {
       next(new ApiError(error.message, error.statusCode))
     } else {

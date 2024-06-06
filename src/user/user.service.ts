@@ -3,6 +3,7 @@ import ApiError from '../utils/apiError'
 import * as repository from './user.repository'
 import { db } from '../db'
 import imagekit from '../utils/imagekit'
+import { CreateNotification } from '../../types'
 
 export const getAllUsers = async (query: string) => {
   const users = await repository.findAllUsers(query)
@@ -18,19 +19,31 @@ export const getUserById = async (userId: string) => {
   return user
 }
 
-export const followUser = async (targetId: string, currentUserId: string) => {
-  if (targetId === currentUserId) {
+export const followUser = async (targetId: string, currentUser: User) => {
+  if (targetId === currentUser.id) {
     throw new ApiError("Can't follow your self", 400)
   }
-  const targteUser = await getUserById(targetId)
-  const isFollow = targteUser.followers.find((f) => f.followerId === currentUserId)
+  const targetUser = await getUserById(targetId)
+  const currentUserLogin = await getUserById(currentUser.id)
+  const isFollow = targetUser.followers.find((f) => f.followerId === currentUserLogin.id)
 
   let message: string = ''
   if (isFollow) {
     await repository.deleteUserFollower(isFollow.followerId, isFollow.followesId)
     message = 'Unfollow success'
   } else {
-    await repository.addUserFollower(targetId, currentUserId)
+    await repository.addUserFollower(targetId, currentUserLogin.id)
+    const payload: CreateNotification = {
+      message: `started following you`,
+      type: 'follow',
+      userId: targetId,
+      actorProfilePicUrl: currentUserLogin.profilePicUrl || undefined,
+      actorUsername: currentUserLogin.username,
+      additionalInfo: {
+        user: currentUserLogin,
+      },
+    }
+    await repository.createNotification(payload)
     message = 'Follow success'
   }
 

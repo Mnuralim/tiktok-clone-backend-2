@@ -41,7 +41,7 @@ export const followUser = async (req: Request, res: Response, next: NextFunction
     if (!targetId) {
       throw new ApiError('Target id is required', 400)
     }
-    const message: string = await service.followUser(targetId, req.user.id)
+    const message: string = await service.followUser(targetId, req.user)
     res.status(200).json({ success: true, message })
   } catch (error: unknown) {
     if (error instanceof ApiError) {
